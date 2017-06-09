@@ -103,4 +103,4 @@ ENV/
 
 #ignore idea
 .idea/*
-test.py
+/test.py
