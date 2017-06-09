@@ -10,6 +10,7 @@ class Data:
 
     def load_data_from_file(self, filename, list_stand, type_norm='s', list_feature=None):
         pre_data = pd.read_csv(filename)
+        pre_data = self.__id_as_index(pre_data)
         pre_data = self.__preprocess(pre_data)
         pre_data = self.__clean_data(pre_data,['Age'])
         if list_feature:
@@ -56,6 +57,12 @@ class Data:
             data[feature] = data[feature].map(
                 lambda x: (x - data[feature].min()) / (data[feature].max() - data[feature].min()))
             return data
+
+    @staticmethod
+    def __id_as_index(data):
+        data = data.set_index(data['PassengerId'])
+        del data['PassengerId']
+        return data
 
     def save_data(self, name=None, file_path=None):
         if not name:
