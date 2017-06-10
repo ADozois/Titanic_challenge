@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svm backend="tf">
+    <params>
+        <param exemple_id_column="te"/>
+        <param feature_column='test'/>
+        <param weight_column_name="None"/>
+        <param model_dir="None"/>
+        <param l1_regularization="0.0"/>
+        <param l2_regularization="0.0"/>
+        <param num_loss_partitions="1"/>
+        <param kernels="None"/>
+        <param config="None"/>
+        <param feature_engineering_fn="None"/>
+    </params>
+</svm>

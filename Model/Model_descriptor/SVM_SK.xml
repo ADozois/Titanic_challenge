@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svm backend="sk">
+    <model type="linear">
+        <params_lin>
+            <param penalty="l2"/>
+            <param loss="squared_hinge"/>
+            <param dual="True"/>
+            <param tol="0.0001"/>
+            <param C="1.0"/>
+            <param multi_class="ovr"/>
+            <param num_loss_partitions="1"/>
+            <param fit_intercept="True"/>
+            <param intercept_scaling="1"/>
+            <param class_weight="None"/>
+            <param verbose="0"/>
+            <param random_state="None"/>
+            <param max_iter="1000"/>
+        </params_lin>
+        <params_rbf>
+            <param kernel="rbf"/>
+            <param degree="3"/>
+            <param gamma="auto"/>
+            <param coef0="0.0"/>
+            <param tol="0.001"/>
+            <param C="1.0"/>
+            <param epsilon="0.1"/>
+            <param shrinking="True"/>
+            <param cache_size="200"/>
+            <param verbose="False"/>
+            <param max_iter="-1"/>
+        </params_rbf>
+    </model>
+</svm>
