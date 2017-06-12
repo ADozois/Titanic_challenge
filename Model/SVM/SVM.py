@@ -5,11 +5,10 @@ from tensorflow.contrib.learn import SVM
 from abc import ABCMeta, abstractmethod
 
 
-
 class Svm:
     __metaclass__ = ABCMeta
 
-    def __init__(self,xml_config):
+    def __init__(self, xml_config):
         self.core = self.__build_model(xml_config)
         self.prediction = None
 
@@ -46,7 +45,9 @@ class Svm:
 
     @abstractmethod
     def __parse_xml(self, xml_config):
-        """Parse configuration for model"""
+        """Parse configuration for model
+        :param **kwargs:
+        """
         return
 
     def save(self, file_name, file_path):
@@ -61,7 +62,7 @@ class Svm:
 
 
 class SvmTf(Svm):
-    def __init__(self,config_file):
+    def __init__(self, config_file):
         super().__init__(config_file)
 
     def __build_model(self, xml_file):
@@ -87,17 +88,42 @@ class SvmTf(Svm):
         self.prediction = self.core.predict(predict_data)
         return self.prediction
 
+
 class SvmSk(Svm):
     def __init__(self, xml_file):
         super().__init__(xml_file)
 
     def __build_model(self, xml_file):
+        svm_params = self.__parse_xml(xml_file)
         if xml_file.get('type') == 'linear':
-            pass
-
+            self.core = SVMSK.LinearSVC(penalty=svm_params['penalty'], loss=svm_params['loss'], dual=svm_params['dual'],
+                                        tol=svm_params['tol'], C=svm_params['C'], multi_class=svm_params['multi_class'],
+                                        fit_intercept=svm_params['fit_intercept'],
+                                        intercept_scaling=svm_params['intercept_scaling'],
+                                        class_weight=svm_params['class_weight'], verbose=svm_params['verbose'],
+                                        random_state=svm_params['random_state'], max_iter=svm_params['max_itr'])
+        else:
+            self.core = SVMSK.SVR(kernel=svm_params['kernel'], degree=svm_params['degree'], gamma=svm_params['gamma'],
+                                  coef0=svm_params['coef0'], tol=svm_params['tol'], C=svm_params['C'],
+                                  epsilon=svm_params['epsilon'], shrinking=svm_params['shrinking'],
+                                  cache_size=svm_params['cache_size'], verbose=svm_params['verbose'],
+                                  max_iter=svm_params['max_iter'])
 
     def __parse_xml(self, xml_config):
-        pass
+        params = {}
+        if xml_config.get('type') == 'linear':
+            xml_params = xml_config.find('params_lin')
+        else:
+            xml_params = xml_config.find('params_rbf')
+        for param in xml_params:
+            params.update(param.attrib)
+        return params
+
+    def fit(self, train_data):
+        self.core.fit(train_data[0],train_data[1])
+
+    def predict(self, predict_data):
+        self.core.predict(predict_data)
 
 
 class SvmFactory:
